@@ -1,0 +1,12 @@
+{
+  "app": {
+    "title": "Welcome to my app",
+    "subtitle": "The fastest way to ship",
+    "nav": {
+      "home": "Home",
+      "settings": "Settings"
+    }
+  },
+  "greeting": "Hello, {name}!",
+  "items_count": "You have {{count}} items"
+}

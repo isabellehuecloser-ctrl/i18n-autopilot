@@ -1,0 +1,39 @@
+name: "i18n Autopilot"
+description: "Auto-translate missing i18n keys on every pull request using AI."
+author: "i18n-autopilot"
+branding:
+  icon: "globe"
+  color: "purple"
+
+inputs:
+  source-locale:
+    description: "The reference locale that contains the source-of-truth keys (e.g. en)."
+    required: false
+    default: "en"
+  locales-dir:
+    description: "Directory holding one JSON file per locale (e.g. locales/en.json, locales/fr.json)."
+    required: false
+    default: "locales"
+  api-key:
+    description: "API key for the translation provider (OpenAI by default). Pass via a repository secret."
+    required: true
+  model:
+    description: "Model used for translation."
+    required: false
+    default: "gpt-4o-mini"
+  commit:
+    description: "When true, commit the generated translations back to the pull request branch."
+    required: false
+    default: "true"
+  github-token:
+    description: "Token used to commit and comment. Defaults to the workflow token."
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  translated-keys:
+    description: "Total number of keys translated across all locales."
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
