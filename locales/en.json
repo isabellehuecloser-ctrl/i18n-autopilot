@@ -8,5 +8,6 @@
     }
   },
   "greeting": "Hello, {name}!",
-  "items_count": "You have {{count}} items"
+  "items_count": "You have {{count}} items",
+  "save_btn": "Save changes"
 }
