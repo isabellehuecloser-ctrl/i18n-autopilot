@@ -1,5 +1,8 @@
 # 🌍 i18n Autopilot
 
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-i18n%20Autopilot-2ea44f?logo=github&logoColor=white)](https://github.com/marketplace/actions/i18n-autopilot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Auto-translate your missing i18n keys on every pull request — powered by AI.**
 
 Stop manually copying new strings into every locale file. When a pull request adds
@@ -117,6 +120,17 @@ passes through any third-party service besides your chosen AI provider.
 - Glossary / do-not-translate terms
 - Tone and formality controls
 - Hosted Pro version with usage dashboard
+
+## Show it off
+
+Using i18n Autopilot? Add the badge to your README so visitors know your locales
+stay in sync automatically:
+
+[![i18n Autopilot](https://img.shields.io/badge/i18n-Autopilot-2ea44f?logo=googletranslate&logoColor=white)](https://github.com/marketplace/actions/i18n-autopilot)
+
+```md
+[![i18n Autopilot](https://img.shields.io/badge/i18n-Autopilot-2ea44f?logo=googletranslate&logoColor=white)](https://github.com/marketplace/actions/i18n-autopilot)
+```
 
 ## License
 
