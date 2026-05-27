@@ -8,5 +8,6 @@
     }
   },
   "greeting": "Hello, {name}!",
-  "items_count": "You have {{count}} items"
+  "items_count": "You have {{count}} items",
+  "welcome_back": "Welcome back, {name}!"
 }
