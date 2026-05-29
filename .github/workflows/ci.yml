@@ -18,3 +18,5 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: Verify committed dist/ is up to date with source
+        run: git diff --exit-code dist/
