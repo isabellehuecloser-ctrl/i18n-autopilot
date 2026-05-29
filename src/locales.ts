@@ -32,9 +32,13 @@ export function flatten(obj: JsonObject, prefix = ""): Record<string, string> {
   return out;
 }
 
+const FORBIDDEN_PATH_SEGMENTS = new Set(["__proto__", "prototype", "constructor"]);
+
 /** Set a dot-notation key on a nested object, creating intermediate objects as needed. */
 export function setByPath(target: JsonObject, dotKey: string, value: string): void {
   const parts = dotKey.split(".");
+  // Prevent prototype pollution: keys come from attacker-controlled source JSON.
+  if (parts.some((p) => FORBIDDEN_PATH_SEGMENTS.has(p))) return;
   let node = target;
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i];
