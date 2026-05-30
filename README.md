@@ -10,7 +10,7 @@ or changes keys in your source language, i18n Autopilot detects what's missing i
 every other locale, translates it, and commits the result back to the PR with a
 summary comment. Placeholders and HTML are preserved.
 
-![i18n Autopilot auto-translates missing keys on a pull request](https://raw.githubusercontent.com/isabellehuecloser-ctrl/i18n-autopilot/main/docs/demo.gif)
+![i18n Autopilot auto-translates missing keys on a pull request](docs/hero.png)
 
 > **Two ways to use it**
 > - 🆓 **Free GitHub Action** (this repo) — bring your own OpenAI key. Setup below.
