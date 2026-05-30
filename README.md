@@ -14,7 +14,7 @@ summary comment. Placeholders and HTML are preserved.
 
 > **Two ways to use it**
 > - 🆓 **Free GitHub Action** (this repo) — bring your own OpenAI key. Setup below.
-> - ⚡ **Hosted Pro** — no API key, no CI setup, unlimited keys. [Install the app →](https://github.com/apps/i18n-autopilot) · [Dashboard](https://i18n-autopilot-app.fly.dev/dashboard)
+> - ⚡ **Hosted Pro** — no API key, no CI setup, unlimited keys. [Install the app →](https://github.com/apps/i18n-autopilot) · [Dashboard](https://i18n.useautopilot.dev/dashboard)
 
 ---
 
