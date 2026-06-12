@@ -19,7 +19,8 @@ async function run(): Promise<void> {
   const localesDir = core.getInput("locales-dir") || "locales";
   const apiKey = core.getInput("api-key", { required: true });
   const model = core.getInput("model") || "gpt-4o-mini";
-  const shouldCommit = (core.getInput("commit") || "true").toLowerCase() === "true";
+  const shouldCommit =
+    (core.getInput("commit") || "true").toLowerCase() === "true";
   const token = core.getInput("github-token");
 
   if (detectLayout(localesDir, sourceLocale) === "none") {
@@ -47,12 +48,27 @@ async function run(): Promise<void> {
       sourceCache.set(unit.sourcePath, sourceFlat);
     }
 
-    const targetObj: JsonObject = fs.existsSync(unit.targetPath) ? readJson(unit.targetPath) : {};
+    // ✅ AUTO-CREATE FILE IF NOT EXISTS
+    if (!fs.existsSync(unit.targetPath)) {
+      fs.mkdirSync(require("node:path").dirname(unit.targetPath), {
+        recursive: true,
+      });
+      writeJson(unit.targetPath, {});
+    }
+
+    const targetObj: JsonObject = readJson(unit.targetPath);
+
     const missing = missingKeys(sourceFlat, flatten(targetObj));
+
     if (Object.keys(missing).length === 0) continue;
 
-    const label = unit.namespace ? `${unit.locale}/${unit.namespace}` : unit.locale;
-    core.info(`${label}: translating ${Object.keys(missing).length} missing key(s)...`);
+    const label = unit.namespace
+      ? `${unit.locale}/${unit.namespace}`
+      : unit.locale;
+
+    core.info(
+      `${label}: translating ${Object.keys(missing).length} missing key(s)...`
+    );
 
     const translated = await translateBatch(missing, {
       apiKey,
@@ -61,14 +77,21 @@ async function run(): Promise<void> {
     });
 
     let applied = 0;
+
     for (const [key, value] of Object.entries(translated)) {
       setByPath(targetObj, key, value);
       applied++;
     }
+
     writeJson(unit.targetPath, targetObj);
 
-    perLocale.set(unit.locale, (perLocale.get(unit.locale) ?? 0) + applied);
+    perLocale.set(
+      unit.locale,
+      (perLocale.get(unit.locale) ?? 0) + applied
+    );
+
     totalTranslated += applied;
+
     core.info(`${label}: wrote ${applied} translation(s).`);
   }
 
@@ -82,26 +105,47 @@ async function run(): Promise<void> {
   if (shouldCommit) {
     await commitChanges(localesDir);
   }
+
   await postComment(token, perLocale, totalTranslated);
 }
 
 async function commitChanges(localesDir: string): Promise<void> {
-  const headRef = github.context.payload.pull_request?.head?.ref;
+  const headRef =
+    github.context.payload.pull_request?.head?.ref;
+
   try {
-    await exec.exec("git", ["config", "user.name", "i18n-autopilot[bot]"]);
+    await exec.exec("git", [
+      "config",
+      "user.name",
+      "i18n-autopilot[bot]",
+    ]);
+
     await exec.exec("git", [
       "config",
       "user.email",
       "i18n-autopilot[bot]@users.noreply.github.com",
     ]);
+
     await exec.exec("git", ["add", localesDir]);
-    await exec.exec("git", ["commit", "-m", "chore(i18n): add missing translations [skip ci]"]);
-    await exec.exec("git", headRef ? ["push", "origin", `HEAD:${headRef}`] : ["push"]);
+
+    await exec.exec(
+      "git",
+      ["commit", "-m", "chore(i18n): add missing translations [skip ci]"]
+    );
+
+    await exec.exec(
+      "git",
+      headRef
+        ? ["push", "origin", `HEAD:${headRef}`]
+        : ["push"]
+    );
+
     core.info("Committed and pushed translations.");
   } catch (err) {
     core.warning(
-      `Could not commit translations automatically: ${(err as Error).message}. ` +
-        "Ensure the workflow checks out the PR head ref and has contents:write permission."
+      `Could not commit translations automatically: ${
+        (err as Error).message
+      }. Ensure workflow has correct permissions.`
     );
   }
 }
@@ -113,11 +157,14 @@ async function postComment(
 ): Promise<void> {
   const pr = github.context.payload.pull_request;
   if (!token || !pr) return;
+
   try {
     const octokit = github.getOctokit(token);
+
     const lines = [...perLocale.entries()]
       .map(([locale, count]) => `- \`${locale}\`: ${count} key(s)`)
       .join("\n");
+
     const body = [
       "### 🌍 i18n Autopilot",
       "",
@@ -125,6 +172,7 @@ async function postComment(
       "",
       lines,
     ].join("\n");
+
     await octokit.rest.issues.createComment({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -132,8 +180,12 @@ async function postComment(
       body,
     });
   } catch (err) {
-    core.warning(`Could not post PR comment: ${(err as Error).message}`);
+    core.warning(
+      `Could not post PR comment: ${(err as Error).message}`
+    );
   }
 }
 
-run().catch((err) => core.setFailed((err as Error).message));
+run().catch((err) =>
+  core.setFailed((err as Error).message)
+);

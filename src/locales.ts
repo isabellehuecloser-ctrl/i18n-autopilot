@@ -1,6 +1,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+const SUPPORTED_LOCALES = ["fr", "de", "es"];
+
 export type JsonValue =
   | string
   | number
@@ -74,50 +76,22 @@ export function detectLayout(dir: string, sourceLocale: string): Layout {
 }
 
 /** Build the list of source→target file pairs for either layout. */
-export function listTranslationUnits(dir: string, sourceLocale: string): TranslationUnit[] {
+export function listTranslationUnits(
+  dir: string,
+  sourceLocale: string
+): TranslationUnit[] {
   const layout = detectLayout(dir, sourceLocale);
 
-  if (layout === "flat") {
-    const sourcePath = path.join(dir, `${sourceLocale}.json`);
-    return fs
-      .readdirSync(dir)
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => path.basename(f, ".json"))
-      .filter((code) => code !== sourceLocale)
-      .map((locale) => ({
-        locale,
-        namespace: null,
-        sourcePath,
-        targetPath: path.join(dir, `${locale}.json`),
-      }));
-  }
+  if (layout !== "flat") return [];
 
-  if (layout === "nested") {
-    const sourceDir = path.join(dir, sourceLocale);
-    const namespaces = fs
-      .readdirSync(sourceDir)
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => path.basename(f, ".json"));
-    const targetLocales = fs
-      .readdirSync(dir, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && d.name !== sourceLocale)
-      .map((d) => d.name);
+  const sourcePath = path.join(dir, `${sourceLocale}.json`);
 
-    const units: TranslationUnit[] = [];
-    for (const locale of targetLocales) {
-      for (const namespace of namespaces) {
-        units.push({
-          locale,
-          namespace,
-          sourcePath: path.join(sourceDir, `${namespace}.json`),
-          targetPath: path.join(dir, locale, `${namespace}.json`),
-        });
-      }
-    }
-    return units;
-  }
-
-  return [];
+  return SUPPORTED_LOCALES.map((locale) => ({
+    locale,
+    namespace: null,
+    sourcePath,
+    targetPath: path.join(dir, `${locale}.json`),
+  }));
 }
 
 /** Keys present (as strings) in source but missing or empty in target. */
