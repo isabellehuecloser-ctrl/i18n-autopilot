@@ -92,6 +92,19 @@ The layout is detected automatically from your `source-locale`.
 | `model`         | no       | `gpt-4o-mini`  | Model used for translation.                                        |
 | `commit`        | no       | `true`         | Commit the generated translations back to the PR branch.           |
 | `github-token`  | no       | workflow token | Token used to commit and comment.                                  |
+| `license-key`   | no       | —              | Autopilot Pro key. Required only on **private** repos (public is free). [Get one →](https://useautopilot.dev) |
+
+### Private repositories (Autopilot Pro)
+
+Public repos are free. On a **private** repo, add your license key:
+
+```yaml
+        with:
+          api-key: ${{ secrets.OPENAI_API_KEY }}
+          license-key: ${{ secrets.AUTOPILOT_LICENSE_KEY }}
+```
+
+Public repositories are always free. Private repositories need a Pro license — **$19/mo or $190/yr** (2 months free) at [i18n.useautopilot.dev](https://i18n.useautopilot.dev). If the license server is ever unreachable, the check **fails open** and never blocks your CI.
 
 ## Outputs
 
