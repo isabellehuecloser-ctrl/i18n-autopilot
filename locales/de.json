@@ -1,0 +1,12 @@
+{
+  "app": {
+    "title": "Willkommen bei meiner App",
+    "subtitle": "Der schnellste Weg zum Release",
+    "nav": {
+      "home": "Startseite",
+      "settings": "Einstellungen"
+    }
+  },
+  "greeting": "Hallo, {name}!",
+  "items_count": "Du hast {{count}} Elemente"
+}
