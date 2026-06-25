@@ -1,5 +1,13 @@
 {
   "app": {
-    "title": "Bienvenue dans mon application"
-  }
+    "title": "Bienvenue dans mon application",
+    "subtitle": "Le moyen le plus rapide d'expédier",
+    "nav": {
+      "home": "Accueil",
+      "settings": "Paramètres"
+    }
+  },
+  "greeting": "Bonjour, {name} !",
+  "items_count": "Vous avez {{count}} articles",
+  "welcome_back": "Content de te revoir, {name} !"
 }
